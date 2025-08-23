@@ -1,30 +1,38 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base
-from sqlalchemy.pool import NullPool
+# database.py
 import os
 from typing import AsyncGenerator
 
-#Database URL
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://admin:Nnaruto890@localhost/job_tracker")
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import NullPool
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Database URL — DO NOT hardcode credentials in repo. Use environment variables.
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError(
+        "DATABASE_URL environment variable is required. "
+        "Please set it in your .env file or environment."
+    )
+
 ASYNC_DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
 
-#Create async engine
 engine = create_async_engine(
     ASYNC_DATABASE_URL,
-    echo = True,
-    poolclass = NullPool,
-    future = True
+    echo=True,
+    poolclass=NullPool,
+    future=True,
 )
 
-#Create async session maker
 AsyncSessionLocal = sessionmaker(
-    engine,
-    class_ =AsyncSession,
-    expire_on_commit = False
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
 )
 
-#Dependecy for FastAPI
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSessionLocal() as session:
         try:
@@ -35,14 +43,14 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
         finally:
             await session.close()
 
-#Create tables
+# Create tables helper
 async def create_tables():
     from models import Base
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-#Drop all tables 
+# Drop tables helper
 async def drop_tables():
     from models import Base
-    async with engine.begin as conn:
+    async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

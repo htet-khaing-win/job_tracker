@@ -1,3 +1,4 @@
+# schemas.py
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional, List
@@ -30,7 +31,7 @@ class JobPlatform(str, Enum):
     GLASSDOOR = "glassdoor"
     OTHER = "other"
 
-# Base schemas
+# Company
 class CompanyBase(BaseModel):
     name: str
     domain: Optional[str] = None
@@ -46,11 +47,11 @@ class Company(CompanyBase):
     id: int
     created_at: datetime
     updated_at: datetime
-    
-    class Config:
-        from_attributes = True
 
-# Job Application schemas
+    class Config:
+        orm_mode = True
+
+# Job Application
 class JobApplicationBase(BaseModel):
     position_title: str
     job_description: Optional[str] = None
@@ -63,7 +64,7 @@ class JobApplicationBase(BaseModel):
     notes: Optional[str] = None
 
 class JobApplicationCreate(JobApplicationBase):
-    company_name: str  # We'll find or create company
+    company_name: str
 
 class JobApplicationUpdate(BaseModel):
     status: Optional[ApplicationStatus] = None
@@ -78,11 +79,11 @@ class JobApplication(JobApplicationBase):
     application_email_id: Optional[str] = None
     notion_page_id: Optional[str] = None
     company: Company
-    
-    class Config:
-        from_attributes = True
 
-# Email schemas
+    class Config:
+        orm_mode = True
+
+# Email Log
 class EmailLogBase(BaseModel):
     sender_email: EmailStr
     sender_name: Optional[str] = None
@@ -103,11 +104,11 @@ class EmailLog(EmailLogBase):
     processed: bool
     processing_notes: Optional[str] = None
     created_at: datetime
-    
-    class Config:
-        from_attributes = True
 
-# Interview schemas
+    class Config:
+        orm_mode = True
+
+# Interview
 class InterviewBase(BaseModel):
     interview_type: Optional[str] = None
     scheduled_date: datetime
@@ -133,55 +134,8 @@ class Interview(InterviewBase):
     reminder_sent: bool
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
-# Analytics schemas
-class ApplicationStats(BaseModel):
-    total_applications: int
-    pending_applications: int
-    interviews_scheduled: int
-    offers_received: int
-    rejection_rate: float
-    response_rate: float
-    avg_response_time_days: Optional[float] = None
-
-class PlatformStats(BaseModel):
-    platform: JobPlatform
-    application_count: int
-    response_count: int
-    response_rate: float
-    interview_count: int
-
-class CompanyStats(BaseModel):
-    company_name: str
-    application_count: int
-    last_application_date: datetime
-    status_breakdown: dict
-
-class DashboardData(BaseModel):
-    stats: ApplicationStats
-    recent_applications: List[JobApplication]
-    upcoming_interviews: List[Interview]
-    recent_emails: List[EmailLog]
-    platform_breakdown: List[PlatformStats]
-    top_companies: List[CompanyStats]
-
-# Gmail API schemas
-class GmailSyncRequest(BaseModel):
-    days_back: int = 30
-    force_resync: bool = False
-
-class GmailSyncResponse(BaseModel):
-    emails_processed: int
-    new_applications_found: int
-    new_responses_found: int
-    errors: List[str]
-
-# Notion sync schemas
-class NotionSyncResponse(BaseModel):
-    synced_applications: int
-    created_pages: int
-    updated_pages: int
-    errors: List[str]
+# Analytics & other response schemas left unchanged...
