@@ -3,11 +3,13 @@
 .env.local
 .env.*.local
 
-# Python
+# Python cache / compiled files
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+
+# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -45,13 +47,14 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.cover
-*.py,cover
+*.py.cover
 .hypothesis/
 .pytest_cache/
 cover/
 
 # Virtual environments
 .env
+.envrc
 .venv
 env/
 venv/
@@ -59,12 +62,95 @@ ENV/
 env.bak/
 venv.bak/
 
-# IDEs
+# Translations
+*.mo
+*.pot
+
+# Django / Flask / DB stuff
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv / pipenv / poetry / pdm / pixi
+# .python-version
+#Pipfile.lock
+#poetry.lock
+#poetry.toml
+#pdm.lock
+#pdm.toml
+.pdm-python
+.pdm-build/
+.pixi
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath
+*.sage.py
+
+# Spyder / Rope
+.spyderproject
+.spyproject
+.ropeproject
+
+# mkdocs
+/site
+
+# mypy / Pyre / pytype
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Cython
+cython_debug/
+
+# IDEs / Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.spyderproject
+.spyproject
+
+# Cursor (AI editor)
+.cursorignore
+.cursorindexingignore
+
+# Ruff
+.ruff_cache/
+
+# Abstra
+.abstra/
+
+# Marimo
+marimo/_static/
+marimo/_lsp/
+__marimo__/
 
 # OS generated files
 .DS_Store
