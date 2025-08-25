@@ -1,5 +1,5 @@
 # schemas.py
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 from typing import Optional, List
 from enum import Enum
@@ -138,4 +138,13 @@ class Interview(InterviewBase):
     class Config:
         orm_mode = True
 
-# Analytics & other response schemas left unchanged...
+#-----schema for updating company
+
+class CompanyUpdate(BaseModel):
+    
+    name: Optional[str] = Field(None, min_length=1, max_length=200)
+    industry: Optional[str] = Field(None, max_length=100)
+    website: Optional[str] = Field(None, max_length=500)
+    description: Optional[str] = None
+    location: Optional[str] = Field(None, max_length=200)
+    size: Optional[str] = Field(None, max_length=50)
